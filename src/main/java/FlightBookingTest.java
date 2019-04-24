@@ -64,7 +64,8 @@ public class FlightBookingTest {
 
     }
 
-   
+   //Implicit and explicit waits should have been considered over thread
+  // All the below methods should have been part of a single class and can be called extended where required
     private void waitFor(int durationInMilliSeconds) {
         try {
             Thread.sleep(durationInMilliSeconds);
