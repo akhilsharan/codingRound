@@ -19,7 +19,11 @@ public class SignInTest {
 
         driver.findElement(By.linkText("Your trips")).click();
         driver.findElement(By.id("SignIn")).click();
-
+        
+        /*Added additional wait and also the login button was part of 2nd frame
+         * so switched to the correct iframe before executing the script*/
+        waitFor(10000);
+        driver.switchTo().frame(1);
         driver.findElement(By.id("signInButton")).click();
 
         String errors1 = driver.findElement(By.id("errors1")).getText();

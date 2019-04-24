@@ -11,10 +11,9 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 public class FlightBookingTest {
-
+	
     WebDriver driver = new ChromeDriver();
-
-
+    
     @Test
     public void testThatResultsAppearForAOneWayJourney() {
 
@@ -28,21 +27,30 @@ public class FlightBookingTest {
 
         //wait for the auto complete options to appear for the origin
 
-        waitFor(2000);
-        List<WebElement> originOptions = driver.findElement(By.id("ui-id-1")).findElements(By.tagName("li"));
+        /*Updated xpath for Origin and Destination
+         *Both the Xpath were changing for each session, so made them dynamic*/
+        
+        waitFor(5000);
+        List<WebElement> originOptions = driver.findElements(By.xpath("(//a[starts-with(@id,'ui-id-')])[1]/parent::li"));
         originOptions.get(0).click();
+        
 
-        driver.findElement(By.id("toTag")).clear();
-        driver.findElement(By.id("toTag")).sendKeys("Delhi");
+        driver.findElement(By.id("ToTag")).clear();
+        driver.findElement(By.id("ToTag")).sendKeys("Delhi");
 
         //wait for the auto complete options to appear for the destination
 
         waitFor(2000);
         //select the first item from the destination auto complete list
-        List<WebElement> destinationOptions = driver.findElement(By.id("ui-id-2")).findElements(By.tagName("li"));
+        List<WebElement> destinationOptions = driver.findElements(By.xpath("(//a[starts-with(@id,'ui-id-')])[2]/parent::li"));    
         destinationOptions.get(0).click();
 
-        driver.findElement(By.xpath("//*[@id='ui-datepicker-div']/div[1]/table/tbody/tr[3]/td[7]/a")).click();
+        /*Updated logic where the Calnder icon was not select but date was being selected
+         *Updated xpath to select first day of next available month to make it fail proof*/
+        
+        driver.findElement(By.xpath("//*[@class='icon ir datePicker']")).click();
+        waitFor(2000);
+        driver.findElement(By.xpath("(//div[@id='ui-datepicker-div']/div[2]/table/tbody/tr/td[@data-handler='selectDay'])[1]")).click();
 
         //all fields filled in. Now click on search
         driver.findElement(By.id("SearchBtn")).click();
@@ -56,7 +64,7 @@ public class FlightBookingTest {
 
     }
 
-
+   
     private void waitFor(int durationInMilliSeconds) {
         try {
             Thread.sleep(durationInMilliSeconds);
@@ -76,11 +84,13 @@ public class FlightBookingTest {
     }
 
     private void setDriverPath() {
-        if (PlatformUtil.isMac()) {
-            System.setProperty("webdriver.chrome.driver", "chromedriver");
-        }
+    	
+
         if (PlatformUtil.isWindows()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
+        }
+        if (PlatformUtil.isMac()) {
+            System.setProperty("webdriver.chrome.driver", "chromedriver");
         }
         if (PlatformUtil.isLinux()) {
             System.setProperty("webdriver.chrome.driver", "chromedriver_linux");
